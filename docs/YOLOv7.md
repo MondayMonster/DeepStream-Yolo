@@ -1,3 +1,6 @@
+We just need to do the step "compile the lib". Then move the created folder to opt ... deepstream
+
+
 # YOLOv7 usage
 
 **NOTE**: The yaml file is not required.
