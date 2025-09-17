@@ -1,3 +1,9 @@
+for analysis on how to export check this repo:
+
+https://github.com/Ben93kie/YOLOv7-DL23/tree/main
+
+potentially swap order of height and width, not sure
+
 # DeepStream-Yolo
 
 NVIDIA DeepStream SDK 7.0 / 6.4 / 6.3 / 6.2 / 6.1.1 / 6.1 / 6.0.1 / 6.0 / 5.1  configuration for YOLO models
