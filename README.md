@@ -4,6 +4,18 @@ https://github.com/Ben93kie/YOLOv7-DL23/tree/main
 
 potentially swap order of height and width, not sure
 
+for changing the weights file, upuload the weights file to this directory (/home/nvidia/Documents/DeepStream-Yolo) on the particular brain. for a selection of checkpoints, please check google drive:
+
+https://drive.google.com/drive/folders/1XWnGI7TcVPTn6LOuFz6aeRuDXi3C2lAL?usp=sharing
+
+pls change yolov7config.txt inside deepstream main folder to point to that path the:
+
+/opt/nvidia/deepstream/deepstream-6.2/sources/deepstream_python_apps-1.1.6/apps/deepstream-imagedata-multistream/yolov7config.txt
+
+point it to the new checkpoint:
+
+model-engine-file=...
+
 # DeepStream-Yolo
 
 NVIDIA DeepStream SDK 7.0 / 6.4 / 6.3 / 6.2 / 6.1.1 / 6.1 / 6.0.1 / 6.0 / 5.1  configuration for YOLO models
