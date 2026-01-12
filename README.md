@@ -16,6 +16,90 @@ point it to the new checkpoint:
 
 model-engine-file=...
 
+# DetDistHeading notes (repro + benchmarks)
+
+Canonical repro doc:
+- `/home/nvidia/Documents/DeepStream-Yolo/README_int8_packdh.md`
+
+Key scripts (appsrc eval + overlays):
+- `/opt/nvidia/deepstream/deepstream-6.2/sources/deepstream_python_apps-1.1.6/apps/deepstream-imagedata-multistream/eval_dh_int8_fp16_turkey_appsrc_ptq5k_letterbox.py`
+- `/opt/nvidia/deepstream/deepstream-6.2/sources/deepstream_python_apps-1.1.6/apps/deepstream-imagedata-multistream/eval_dh_int8_fp16_coco_appsrc.py`
+- `/opt/nvidia/deepstream/deepstream-6.2/sources/deepstream_python_apps-1.1.6/apps/deepstream-imagedata-multistream/overlay_dh_video.py`
+
+Latest benchmark logs:
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_turkey_appsrc_cuda_parse_20260107.txt` (CUDA parser configs)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_turkey_appsrc_qatlite_v2_fp16fp32_20260107.txt` (landscape FP16/FP32 baselines)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_all_turkey_appsrc_full.txt` (legacy full sweep)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_interval_boat_port_20260108.txt` (tracker + interval FPS)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_coco10k_appsrc_20260108.txt` (10k COCO OD eval)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_coco10k_appsrc_additional_20260109.txt` (10k COCO OD eval, extra engines)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_coco10k_appsrc_best_packdh_8b_engine_20260109.txt` (10k COCO OD eval, best_packdh_8b engine)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_interval_multihead_vs_normal_20260109.txt` (multi-head vs normal YOLO FPS)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_maritimo_fp16.log` (TRT qps, maritimo FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_maritimo_int8.log` (TRT qps, maritimo INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_fp16_qatlite_v2.log` (TRT qps, packdh FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_int8_qatlite_v2_ptq_5k_lb_minmax.log` (TRT qps, packdh INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_maritimo_fp16_20260109.txt` (tracker FPS, maritimo FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_maritimo_int8_20260109.txt` (tracker FPS, maritimo INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_fp16_20260109.txt` (tracker FPS, packdh FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_int8_20260109.txt` (tracker FPS, packdh INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_int8_qdq_20260110.txt` (tracker FPS, packdh QDQ noid INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_maritimo_fp16_20260110.log` (TRT qps, maritimo FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_maritimo_int8_20260110.log` (TRT qps, maritimo INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_qatlite_v2_fp16_20260110.log` (TRT qps, packdh FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_qatlite_v2_int8_ptq_5k_lb_minmax_20260110.log` (TRT qps, packdh INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_qdq_noid_int8_20260110.log` (TRT qps, packdh QDQ noid INT8)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_build_packdh_float_best_fp16_20260111.log` (TRT build, packdh float_best FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_float_best_fp16_20260111.log` (TRT qps, packdh float_best FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_float_best_int8_ptq_1k_lb_minmax_20260111.log` (TRT qps, packdh float_best INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/calib_packdh_float_best_ptq_1k_letterbox_minmax_20260111_v2.log` (PTQ 1k build log)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_float_best_fp16_20260111.txt` (tracker FPS, packdh float_best FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_float_best_int8_ptq_1k_20260111.txt` (tracker FPS, packdh float_best INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_build_packdh_best_ds736x1280_trt85_fp16_20260111_v2.log` (TRT build, packdh best ds736x1280 FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_ds736x1280_trt85_fp16_20260111.log` (TRT qps, packdh best ds736x1280 FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_ds736x1280_trt85_int8_ptq_1k_lb_minmax_20260111.log` (TRT qps, packdh best ds736x1280 INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/calib_packdh_best_ds736x1280_trt85_ptq_1k_letterbox_minmax_20260111.log` (PTQ 1k build log, best ds736x1280)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_best_ds736x1280_trt85_fp16_20260111.txt` (tracker FPS, packdh best ds736x1280 FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_best_ds736x1280_trt85_int8_ptq_1k_20260111.txt` (tracker FPS, packdh best ds736x1280 INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_build_packdh_best_ds736x1280_simplify_fp16_20260111.log` (TRT build, packdh best ds736x1280 simplify FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_ds736x1280_simplify_fp16_20260111.log` (TRT qps, packdh best ds736x1280 simplify FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_ds736x1280_simplify_int8_ptq_1k_lb_minmax_20260111.log` (TRT qps, packdh best ds736x1280 simplify INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/calib_packdh_best_ds736x1280_simplify_ptq_1k_letterbox_minmax_20260111.log` (PTQ 1k build log, best ds736x1280 simplify)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_best_ds736x1280_simplify_fp16_20260111.txt` (tracker FPS, packdh best ds736x1280 simplify FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_packdh_best_ds736x1280_simplify_int8_ptq_1k_20260111.txt` (tracker FPS, packdh best ds736x1280 simplify INT8 PTQ 1k)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_rawdet3_ds736x1280_simplify_fp16_20260111.log` (TRT qps, rawdet3 FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_rawdet3_plus_dh_ds736x1280_simplify_fp16_20260111.log` (TRT qps, rawdet3+dh FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/trtexec_perf_packdh_best_rawdet3_plus_dh_fusedgroup_ds736x1280_simplify_fp16_20260111.log` (TRT qps, rawdet3+dh fusedgroup FP16)
+- `/home/nvidia/Documents/DeepStream-Yolo/outputs/bench_tracker_rawdet3_fp16_20260111.txt` (tracker FPS, rawdet3 FP16)
+
+## Ablation summary: export format vs DH heads
+- TRT FP16: rawdet3 (no DH) runs ~24.9 qps; rawdet3+dh runs ~13.3 qps; packdh runs ~12.7-13.2 qps.
+- TRT FP16: rawdet3+dh fusedgroup runs ~13.4 qps (no material gain vs rawdet3+dh).
+- DeepStream tracker FP16: rawdet3 ~23 FPS (close to maritimo ~22 FPS), while packdh ~11-12 FPS.
+- Interpretation: rawdet3 matches maritimo; rawdet3+dh drops to packdh speed. The DH heads + pack/decode export style dominate latency; onnxsim simplify does not materially change speed.
+- Full details: `/home/nvidia/Documents/DeepStream-Yolo/README_int8_packdh.md` (section “Ablations: rawdet3 vs packdh”).
+
+Datasets (GCS mount required):
+- `/mnt/gs/TempRecordings_COCO_v1/datasets/Downloads_BoatTourTurkey_with_heading`
+- `/home/nvidia/Documents/DeepStream-Yolo/datasets/coco_10k_merged/annotations.json` (merged COCO for 10k OD eval)
+- Mount guide: `/opt/nvidia/deepstream/deepstream-6.2/sources/deepstream_python_apps-1.1.6/apps/deepstream-imagedata-multistream/README_mount_gc.md`
+
+Engines of interest:
+- QAT noid (accurate, slower): `/home/nvidia/Documents/DeepStream-Yolo/best_packdh_8b_qdq_ds736x1280_fixfuse_trt85_noid.engine`
+- QAT-lite v2 PTQ (fast, good): `/home/nvidia/Documents/DeepStream-Yolo/dh_headingcls16_soft_10ep_8gpu_best_packdh_8b_qatlite_v2_ptq_int8_2k_letterbox_minmax.engine`
+- Float-best (ds736x1280) FP16: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_float_best_fp16.engine`
+- Float-best (ds736x1280) INT8 PTQ 1k: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_float_best_ptq_int8_1k_letterbox_minmax.engine`
+- Best ds736x1280 (trt85) FP16: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_best_ds736x1280_trt85_fp16.engine`
+- Best ds736x1280 (trt85) INT8 PTQ 1k: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_best_ds736x1280_trt85_ptq_int8_1k_letterbox_minmax.engine`
+- Best ds736x1280 (simplify) FP16: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_best_ds736x1280_simplify_fp16.engine`
+- Best ds736x1280 (simplify) INT8 PTQ 1k: `/home/nvidia/Documents/DeepStream-Yolo/dh_packdh_best_ds736x1280_simplify_ptq_int8_1k_letterbox_minmax.engine`
+
+Training checkpoints on device:
+- `/home/nvidia/Downloads/yolov7_distance_checkpoints` (see `checksums.sha256`)
+
+Export variants + provenance table:
+- `/home/nvidia/Documents/DeepStream-Yolo/README_int8_packdh.md` (section “Export variants”)
+
 # DeepStream-Yolo
 
 NVIDIA DeepStream SDK 7.0 / 6.4 / 6.3 / 6.2 / 6.1.1 / 6.1 / 6.0.1 / 6.0 / 5.1  configuration for YOLO models
