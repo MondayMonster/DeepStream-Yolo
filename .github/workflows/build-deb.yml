@@ -1,0 +1,55 @@
+name: Build Debian package
+
+on:
+  push:
+    branches:
+      - ota/week1-packaging
+      - ota/staging-3.3.0
+      - ota/staging-3.4.2
+      - ota/staging-3.4.2.1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-22.04
+    env:
+      PACKAGE_NAME: lookout-deepstream-yolo-assets
+      DEB_BUILD_OPTIONS: nostrip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential debhelper devscripts dpkg-dev fakeroot
+
+      - name: Build arm64 Debian package
+        run: |
+          debian/rules clean || true
+          dpkg-buildpackage -us -uc -b -aarm64 -d
+
+      - name: Verify package metadata
+        run: |
+          DEB=$(find .. -maxdepth 1 -name "${PACKAGE_NAME}_*_arm64.deb" | head -n 1)
+          dpkg-deb -f "$DEB" Package Version Architecture
+
+      - name: Collect build artifacts
+        run: |
+          mkdir -p artifacts
+          find .. -maxdepth 1 -name "${PACKAGE_NAME}_*_arm64.deb" -exec cp -v {} artifacts/ \;
+          find .. -maxdepth 1 -name "${PACKAGE_NAME}_*_arm64.ddeb" -exec cp -v {} artifacts/ \; || true
+          find .. -maxdepth 1 -name "${PACKAGE_NAME}_*_arm64.changes" -exec cp -v {} artifacts/ \;
+          find .. -maxdepth 1 -name "${PACKAGE_NAME}_*_arm64.buildinfo" -exec cp -v {} artifacts/ \;
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PACKAGE_NAME }}-arm64
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 14
