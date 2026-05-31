@@ -1,0 +1,47 @@
+# DeepStream PGIE config for the single-head LOOKOUT detector with attached horizon head.
+#
+# Expected ONNX outputs:
+#   boxes, scores, classes, dist, heading, horizon
+#
+# Detection parser consumes only boxes/scores/classes.
+# Dist/heading/horizon remain available through NvDsInferTensorMeta when
+# `output-tensor-meta=1` is enabled.
+#
+# Build-host artifact this was prepared for:
+#   /data/kiefer/YOLOv7_distance/runs/train/odh_horizon_singlehead_transfer_jlrefresh_20260331/best_ds736x1280_multioutput_fp32.onnx
+
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+batch-size=1
+network-mode=2
+network-type=0
+is-classifier=0
+gie-unique-id=1
+
+num-detected-classes=2
+
+maintain-aspect-ratio=1
+symmetric-padding=1
+scaling-filter=1
+
+onnx-file=/data/kiefer/YOLOv7_distance/runs/train/odh_horizon_singlehead_transfer_jlrefresh_20260331/best_ds736x1280_multioutput_fp32.onnx
+model-engine-file=/data/kiefer/YOLOv7_distance/runs/train/odh_horizon_singlehead_transfer_jlrefresh_20260331/best_ds736x1280_multioutput_fp16.engine
+labelfile-path=/workspace/labels.txt
+
+output-blob-names=boxes;scores;classes;dist;heading;horizon
+
+parse-bbox-func-name=NvDsInferParseCustomBoxesScoresClasses
+custom-lib-path=/workspace/deepstream/nvdsinfer_custom_impl_dh/libnvdsinfer_custom_impl_dh.so
+
+cluster-mode=2
+output-tensor-meta=1
+disable-output-host-copy=0
+
+interval=0
+
+[class-attrs-all]
+nms-iou-threshold=0.65
+pre-cluster-threshold=0.25
+topk=300

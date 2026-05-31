@@ -1,0 +1,7 @@
+lookout-deepstream-yolo-assets (3.4.2.1) unstable; urgency=medium
+
+  * JP6/DS7 packaging refresh for OTA staging.
+  * Normalize install paths under /opt/lookout.
+  * Align service definitions with current runtime on lookout153.
+
+ -- LOOKOUT OTA Team <ota@lookout-ai.local>  Fri, 30 May 2026 11:00:00 -0400

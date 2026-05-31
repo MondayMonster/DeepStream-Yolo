@@ -1,0 +1,17 @@
+Source: lookout-deepstream-yolo-assets
+Section: misc
+Priority: optional
+Maintainer: LOOKOUT OTA Team <ota@lookout-ai.local>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/LOOKOUT-AI/DeepStream-Yolo
+
+Package: lookout-deepstream-yolo-assets
+Architecture: arm64
+Depends: ${misc:Depends}, curl, ca-certificates
+Description: LOOKOUT DeepStream YOLO model bundle and parser assets
+ Installs the JP6/DS7-ready LOOKOUT parser shared library, labels, configs,
+ and supporting DeepStream asset files under /opt/lookout/deepstream/assets/.
+ Large model artifacts are fetched at install time and verified against the
+ packaged checksum manifest.

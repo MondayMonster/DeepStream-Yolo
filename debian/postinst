@@ -1,0 +1,63 @@
+#!/bin/sh
+set -e
+
+ASSET_DIR=/opt/lookout/deepstream/assets/lookout_singlehead_horizon_20260402
+MANIFEST="$ASSET_DIR/SHA256SUMS"
+RELEASE_BASE_URL="https://github.com/MondayMonster/DeepStream-Yolo/releases/download/assets-3.4.2.1"
+ASSETS="best_ds736x1280_multioutput_fp16_ds71.engine best_ds736x1280_multioutput_fp32.onnx"
+
+checksum_for() {
+    target="lookout_singlehead_horizon_20260402/$1"
+    awk -v target="$target" '$2 == target { print $1 }' "$MANIFEST"
+}
+
+verify_file() {
+    expected="$1"
+    file="$2"
+    echo "$expected  $file" | sha256sum -c - >/dev/null 2>&1
+}
+
+download_asset() {
+    file="$1"
+    expected="$(checksum_for "$file")"
+    dest="$ASSET_DIR/$file"
+
+    if [ -z "$expected" ]; then
+        echo "Missing checksum for $file in $MANIFEST" >&2
+        exit 1
+    fi
+
+    if [ -f "$dest" ] && verify_file "$expected" "$dest"; then
+        return 0
+    fi
+
+    tmp="$(mktemp "$ASSET_DIR/.${file}.XXXXXX")"
+    cleanup() {
+        rm -f "$tmp"
+    }
+    trap cleanup EXIT INT TERM HUP
+
+    curl -fL --retry 3 --retry-delay 2 -o "$tmp" "$RELEASE_BASE_URL/$file"
+    if ! verify_file "$expected" "$tmp"; then
+        echo "Checksum verification failed for $file" >&2
+        exit 1
+    fi
+
+    mv "$tmp" "$dest"
+    chmod 644 "$dest"
+    trap - EXIT INT TERM HUP
+}
+
+case "$1" in
+    configure|abort-upgrade|abort-remove|abort-deconfigure)
+        install -d -m 755 "$ASSET_DIR"
+        for asset in $ASSETS; do
+            download_asset "$asset"
+        done
+        if command -v systemctl >/dev/null 2>&1 && [ -d /run/systemd/system ]; then
+            systemctl daemon-reload
+        fi
+        ;;
+esac
+
+exit 0

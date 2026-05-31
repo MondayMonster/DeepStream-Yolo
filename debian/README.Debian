@@ -1,0 +1,22 @@
+lookout-deepstream Week 1 scaffold
+==================================
+
+Install root
+------------
+- /opt/lookout/deepstream/
+
+Service intent
+--------------
+- Unit scaffold: lookout-deepstream.service
+- Week 1 uses a placeholder launcher script to document expected service wiring.
+
+Dependency strategy
+-------------------
+- This package expects NVIDIA L4T/JetPack/DeepStream runtime dependencies
+  to be provided by the base image or dependency packages.
+- Maintainer scripts do not compile CUDA/TensorRT artifacts.
+
+Config strategy
+---------------
+- Runtime config should be sourced from /etc/lookout/ for device-specific
+  overrides in later phases.

@@ -1,0 +1,6 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+override_dh_shlibdeps:
+	@echo "Week 1 scaffold: skipping dh_shlibdeps for bundled NVIDIA binaries."
