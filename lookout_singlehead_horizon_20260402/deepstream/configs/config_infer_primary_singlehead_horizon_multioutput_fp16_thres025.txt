@@ -26,14 +26,14 @@ maintain-aspect-ratio=1
 symmetric-padding=1
 scaling-filter=1
 
-onnx-file=/data/kiefer/YOLOv7_distance/runs/train/odh_horizon_singlehead_transfer_jlrefresh_20260331/best_ds736x1280_multioutput_fp32.onnx
-model-engine-file=/data/kiefer/YOLOv7_distance/runs/train/odh_horizon_singlehead_transfer_jlrefresh_20260331/best_ds736x1280_multioutput_fp16.engine
-labelfile-path=/workspace/labels.txt
+onnx-file=/opt/lookout/deepstream/assets/lookout_singlehead_horizon_20260402/best_ds736x1280_multioutput_fp32.onnx
+model-engine-file=/opt/lookout/deepstream/assets/lookout_singlehead_horizon_20260402/best_ds736x1280_multioutput_fp16_ds71.engine
+labelfile-path=/opt/lookout/deepstream/assets/lookout_singlehead_horizon_20260402/labels.txt
 
 output-blob-names=boxes;scores;classes;dist;heading;horizon
 
 parse-bbox-func-name=NvDsInferParseCustomBoxesScoresClasses
-custom-lib-path=/workspace/deepstream/nvdsinfer_custom_impl_dh/libnvdsinfer_custom_impl_dh.so
+custom-lib-path=/opt/lookout/deepstream/assets/lookout_singlehead_horizon_20260402/deepstream/nvdsinfer_custom_impl_dh/libnvdsinfer_custom_impl_dh.so
 
 cluster-mode=2
 output-tensor-meta=1

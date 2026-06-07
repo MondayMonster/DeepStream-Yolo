@@ -4,3 +4,6 @@
 
 override_dh_shlibdeps:
 	@echo "Week 1 scaffold: skipping dh_shlibdeps for bundled NVIDIA binaries."
+
+override_dh_makeshlibs:
+	@echo "Week 1 scaffold: skipping dh_makeshlibs for private bundled parser libraries."
